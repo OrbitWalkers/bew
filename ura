@@ -1,0 +1,59 @@
+import requests
+import time
+
+# Example endpoint of a public ETH2 API (you can replace this with your own or other public APIs)
+API_URL = "https://beaconcha.in/api/v1"
+
+# Function to get the current status of the Beacon Chain and shards
+def get_beacon_chain_status():
+    try:
+        response = requests.get(f"{API_URL}/chain/head")
+        data = response.json()
+        
+        if response.status_code == 200:
+            print("Beacon Chain Head Status:")
+            print(f"Epoch: {data['data']['epoch']}")
+            print(f"Slot: {data['data']['slot']}")
+            print(f"Justified Epoch: {data['data']['justified_epoch']}")
+            print(f"Finalized Epoch: {data['data']['finalized_epoch']}")
+            print(f"Validator Count: {data['data']['validator_count']}")
+            print(f"Active Validators: {data['data']['active_validators']}")
+            print(f"Peers Connected: {data['data']['peers']}")
+        else:
+            print("Error fetching data:", data.get('message', 'Unknown error'))
+    except Exception as e:
+        print(f"Error during request: {e}")
+
+# Function to monitor shard data (this can be expanded to specific shard APIs when they are available)
+def monitor_shards():
+    try:
+        # Example: Fetch a list of active shards (this is just a placeholder, adjust based on actual API)
+        response = requests.get(f"{API_URL}/shards")
+        data = response.json()
+        
+        if response.status_code == 200:
+            print("\nShards Overview:")
+            for shard in data['data']:
+                print(f"Shard ID: {shard['id']}")
+                print(f"Shard State: {shard['state']}")
+                print(f"Validators in Shard: {shard['validator_count']}")
+                print(f"Latest Block: {shard['latest_block']}")
+                print("-" * 30)
+        else:
+            print("Error fetching shard data:", data.get('message', 'Unknown error'))
+    except Exception as e:
+        print(f"Error during request: {e}")
+
+# Main loop for periodic monitoring
+def monitor_eth2():
+    while True:
+        print("\nMonitoring Ethereum 2.0 (Beacon Chain and Shards)...")
+        get_beacon_chain_status()
+        monitor_shards()
+        print("\nWaiting for the next cycle...\n")
+        
+        # Sleep for 30 seconds before the next check
+        time.sleep(30)
+
+if __name__ == "__main__":
+    monitor_eth2()
